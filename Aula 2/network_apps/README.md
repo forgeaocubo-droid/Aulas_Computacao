@@ -44,6 +44,9 @@ Dependencies and private runtime directories are excluded from Git.
 For a production server, install the package in an isolated supported Python
 environment without the `dev` extra.
 
+The runtime libraries alone are also listed in `Aula 2\requirements.txt`
+(`pip install -r ..\requirements.txt`).
+
 ## Configuration
 
 Copy the example configuration files:

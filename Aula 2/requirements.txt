@@ -1,0 +1,11 @@
+# Bibliotecas externas necessárias para rodar server.py, chat.py e game.py.
+# Use Python 3.13 (o Pygame 2.6.1 não tem wheel para Python 3.14 no Windows).
+#
+#   python -m pip install -r requirements.txt
+#
+# O pacote network_apps também precisa estar instalado no mesmo ambiente:
+#
+#   python -m pip install -e network_apps
+
+pygame>=2.6.1
+PyYAML>=6.0.2
