@@ -1,17 +1,17 @@
-"""Run a network_apps entry point from the Aula 2 folder using the project venv.
+"""Run a network_apps entry point from the Aula 2 folder using native Python.
 
-The applications depend on packages installed only in ``network_apps/.venv313``,
-so the launchers start a child process with that interpreter instead of
-importing the package into whichever Python ran the launcher.
+The launcher starts a child process with the same Python interpreter used to
+run it instead of importing the package into the launcher process.
 """
 
+import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 PROJECT: Path = Path(__file__).resolve().parent / "network_apps"
-PYTHON: Path = PROJECT / ".venv313" / "Scripts" / "python.exe"
+PYTHON: Path = Path(sys.executable)
 
 
 def ensure_config(config_name: str) -> Path:
@@ -41,7 +41,12 @@ def run(command: list[str]) -> int:
     The child shares the console, so it receives Ctrl+C directly and performs
     its own orderly shutdown; the launcher only keeps waiting for it.
     """
-    process = subprocess.Popen(command, cwd=PROJECT)
+    environment = os.environ.copy()
+    source = str(PROJECT / "src")
+    environment["PYTHONPATH"] = os.pathsep.join(
+        part for part in (source, environment.get("PYTHONPATH")) if part
+    )
+    process = subprocess.Popen(command, cwd=PROJECT, env=environment)
     while True:
         try:
             return process.wait()
@@ -51,16 +56,18 @@ def run(command: list[str]) -> int:
 
 def launch(module: str, config_name: str, *, needs_name: bool) -> None:
     """Start ``module`` with its configuration and exit with its status code."""
-    if not PYTHON.is_file():
-        print(f"Python environment not found: {PYTHON}", file=sys.stderr)
-        print("See network_apps/README.md for installation steps.", file=sys.stderr)
-        exit_code = 1
-    else:
-        config = ensure_config(config_name)
-        command = [str(PYTHON), "-m", module, "--config", str(config)]
-        if needs_name:
-            command.extend(["--name", display_name()])
-        exit_code = run(command)
+    if sys.version_info < (3, 12):
+        version = f"{sys.version_info.major}.{sys.version_info.minor}"
+        print(
+            f"Python {version} is not supported; use Python 3.12 or newer.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    config = ensure_config(config_name)
+    command = [str(PYTHON), "-m", module, "--config", str(config)]
+    if needs_name:
+        command.extend(["--name", display_name()])
+    exit_code = run(command)
     if exit_code != 0 and sys.stdin.isatty():
         # Keep a double-clicked console window open so the error is readable.
         input("Press Enter to close...")

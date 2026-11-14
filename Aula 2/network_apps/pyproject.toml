@@ -7,7 +7,7 @@ name = "lesson-network-apps"
 version = "0.1.0"
 description = "TCP relay, terminal chat, and a Pygame multiplayer circuit"
 requires-python = ">=3.12"
-dependencies = ["pygame>=2.6.1", "PyYAML>=6.0.2"]
+dependencies = ["pygame-ce>=2.5.8", "pyyaml-pure>=0.1.0"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.9", "mypy>=1.14", "types-PyYAML"]

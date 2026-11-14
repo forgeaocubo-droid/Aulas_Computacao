@@ -13,39 +13,18 @@ No database, web frontend, or external game assets are required.
 
 ## Requirements and installation
 
-Use **Python 3.13** on Windows. The code targets Python 3.12+, but the original
-Pygame 2.6.1 package does not provide a Python 3.14 Windows wheel. Python 3.14
-was tested during setup and could not build Pygame. Do not install unrelated compiler packages to bypass this incompatibility.
+Use the Python already installed on the machine. The code targets Python 3.12+
+and the dependencies are listed in `Aula 2\requirements.txt`.
 
 Open PowerShell in this project directory:
 
 ```powershell
-Set-Location 'C:\GIT_Pedro\Aulas_Computacao\Aula 2\network_apps'
-py -3.13 -m venv .venv313
-.\.venv313\Scripts\python.exe -m pip install -e '.[dev]'
+Set-Location 'C:\GIT_Pedro\Aulas_Computacao\Aula 2'
+python -m pip install -r requirements.txt
 ```
 
-If only Python 3.14 is installed, use an isolated runtime instead. This does
-not modify the global Python installation or PATH:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install uv
-$env:UV_PYTHON_INSTALL_DIR = Join-Path (Get-Location) '.python'
-.\.venv\Scripts\uv.exe python install 3.13 --no-bin
-$runtime = Get-ChildItem '.python' -Filter python.exe -Recurse |
-    Select-Object -First 1 -ExpandProperty FullName
-& $runtime -m venv .venv313
-.\.venv313\Scripts\python.exe -m pip install -e '.[dev]'
-```
-
-The current workspace already has this local Python 3.13 environment prepared.
-Dependencies and private runtime directories are excluded from Git.
-For a production server, install the package in an isolated supported Python
-environment without the `dev` extra.
-
-The runtime libraries alone are also listed in `Aula 2\requirements.txt`
-(`pip install -r ..\requirements.txt`).
+The installation uses the machine's Python and installs the `network_apps`
+package in editable mode. No virtual environment is required.
 
 ## Configuration
 
@@ -66,7 +45,8 @@ who can reach the port can join, read, and send messages.
 
 The `Aula 2` folder contains Python launchers that can be double-clicked or run
 with any Python from any directory (for example `python "Aula 2\chat.py" Alice`).
-They start the application with `network_apps\.venv313` and create
+They start the application with the same Python interpreter used to run the
+launcher and create
 `config\server.yaml` or `config\client.yaml` from the example file if missing:
 
 | Launcher | Application |
@@ -86,27 +66,27 @@ Run each command in its own PowerShell window, from this project directory.
 Start one server:
 
 ```powershell
-.\.venv313\Scripts\python.exe -m network_apps.relay --config 'config\server.yaml'
+python -m network_apps.relay --config 'config\server.yaml'
 ```
 
 Start two terminal chats:
 
 ```powershell
-.\.venv313\Scripts\python.exe -m network_apps.chat --config 'config\client.yaml' --name Alice
+python -m network_apps.chat --config 'config\client.yaml' --name Alice
 ```
 
 ```powershell
-.\.venv313\Scripts\python.exe -m network_apps.chat --config 'config\client.yaml' --name Bob
+python -m network_apps.chat --config 'config\client.yaml' --name Bob
 ```
 
 Start two race clients:
 
 ```powershell
-.\.venv313\Scripts\python.exe -m network_apps.racing.game --config 'config\client.yaml' --name DriverOne
+python -m network_apps.racing.game --config 'config\client.yaml' --name DriverOne
 ```
 
 ```powershell
-.\.venv313\Scripts\python.exe -m network_apps.racing.game --config 'config\client.yaml' --name DriverTwo
+python -m network_apps.racing.game --config 'config\client.yaml' --name DriverTwo
 ```
 
 Equivalent installed commands are `relay-server`, `terminal-chat`, and
@@ -252,10 +232,10 @@ application, not a hardened public chat service.
 ## Development and validation
 
 ```powershell
-.\.venv313\Scripts\python.exe -m pytest -q
-.\.venv313\Scripts\python.exe -m ruff check .
-.\.venv313\Scripts\python.exe -m ruff format --check .
-.\.venv313\Scripts\python.exe -m mypy src
+python -m pytest -q
+python -m ruff check .
+python -m ruff format --check .
+python -m mypy src
 ```
 
 Tests run real loopback TCP connections.
