@@ -13,13 +13,23 @@ No database, web frontend, or external game assets are required.
 
 ## Requirements and installation
 
-Use the Python already installed on the machine. The code targets Python 3.12+
-and the dependencies are listed in `Aula 2\requirements.txt`.
+Use Python 3.12 or newer already installed on the machine. The code and
+dependencies work on Windows and Debian-based Linux systems. Dependencies are
+listed in `Aula 2/requirements.txt`.
 
-Open PowerShell in this project directory:
+Open a terminal in the `Aula 2` directory.
+
+On Debian:
+
+```bash
+cd "Aula 2"
+python3 -m pip install -r requirements.txt
+```
+
+On Windows PowerShell:
 
 ```powershell
-Set-Location 'C:\GIT_Pedro\Aulas_Computacao\Aula 2'
+Set-Location '.\Aula 2'
 python -m pip install -r requirements.txt
 ```
 
@@ -28,7 +38,16 @@ package in editable mode. No virtual environment is required.
 
 ## Configuration
 
-Copy the example configuration files:
+Copy the example configuration files.
+
+On Debian:
+
+```bash
+cp config/server.example.yaml config/server.yaml
+cp config/client.example.yaml config/client.yaml
+```
+
+On Windows PowerShell:
 
 ```powershell
 Copy-Item 'config\server.example.yaml' 'config\server.yaml'
@@ -44,53 +63,56 @@ who can reach the port can join, read, and send messages.
 ### Quick launchers
 
 The `Aula 2` folder contains Python launchers that can be double-clicked or run
-with any Python from any directory (for example `python "Aula 2\chat.py" Alice`).
+with any Python from any directory (for example
+`python3 "Aula 2/chat.py" Alice` on Debian).
 They start the application with the same Python interpreter used to run the
 launcher and create
-`config\server.yaml` or `config\client.yaml` from the example file if missing:
+`config/server.yaml` or `config/client.yaml` from the example file if missing:
 
 | Launcher | Application |
 | --- | --- |
-| `Aula 2\server.py` | Relay server |
-| `Aula 2\chat.py [name]` | Terminal chat |
-| `Aula 2\game.py [name]` | Race game |
+| `Aula 2/server.py` | Relay server |
+| `Aula 2/chat.py [name]` | Terminal chat |
+| `Aula 2/game.py [name]` | Race game |
 
 When the name is omitted, the chat and game launchers ask for it.
 On failure, the window waits for Enter so the error can be read.
-Shared launcher logic is in `Aula 2\_launcher.py`.
+Shared launcher logic is in `Aula 2/_launcher.py`.
 
 ### Manual commands
 
-Run each command in its own PowerShell window, from this project directory.
+Run each command in its own terminal, from the `Aula 2/network_apps`
+directory. On Windows, replace `python3` with `python`.
 
 Start one server:
 
-```powershell
-python -m network_apps.relay --config 'config\server.yaml'
+```bash
+python3 -m network_apps.relay --config 'config/server.yaml'
 ```
 
 Start two terminal chats:
 
-```powershell
-python -m network_apps.chat --config 'config\client.yaml' --name Alice
+```bash
+python3 -m network_apps.chat --config 'config/client.yaml' --name Alice
 ```
 
-```powershell
-python -m network_apps.chat --config 'config\client.yaml' --name Bob
+```bash
+python3 -m network_apps.chat --config 'config/client.yaml' --name Bob
 ```
 
 Start two race clients:
 
-```powershell
-python -m network_apps.racing.game --config 'config\client.yaml' --name DriverOne
+```bash
+python3 -m network_apps.racing.game --config 'config/client.yaml' --name DriverOne
 ```
 
-```powershell
-python -m network_apps.racing.game --config 'config\client.yaml' --name DriverTwo
+```bash
+python3 -m network_apps.racing.game --config 'config/client.yaml' --name DriverTwo
 ```
 
 Equivalent installed commands are `relay-server`, `terminal-chat`, and
-`circuit-race` in the environment's Scripts directory.
+`circuit-race` in the environment's `bin` directory on Debian or `Scripts`
+directory on Windows.
 All entry points support `--help`.
 
 Names must be nonempty, printable, at most 32 characters, and unique

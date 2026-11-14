@@ -9,5 +9,3 @@ logs/
 *.pem
 *.key
 *.crt
-config/server.yaml
-config/client.yaml

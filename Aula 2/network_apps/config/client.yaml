@@ -1,0 +1,10 @@
+host: "157.245.236.229"
+port: 8765
+max_frame_bytes: 65536
+connect_timeout: 5.0
+idle_timeout: 45.0
+race_updates_per_second: 20
+log_level: "INFO"
+log_directory: "logs"
+log_max_bytes: 1048576
+log_backups: 3
